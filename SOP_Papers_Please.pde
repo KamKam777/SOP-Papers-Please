@@ -1,29 +1,29 @@
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-// Card variables
-int cardPosX, cardPosY; // Variables to store the position of the card
-int cardOffsetX, cardOffsetY; // Variables to store the difference between the mouse position and the card position when dragging starts
+// Passport variables
+int passportPosX, passportPosY; // Variables to store the position of the passport
+int passportOffsetX, passportOffsetY; // Variables to store the difference between the mouse position and the passport position when dragging starts
 
-int cardHeight = 300;
-int cardWidth = 400;
-int cardSpeed = 10;
-color cardStampColor = 220;
-boolean cardPresented = false;
+int passportHeight = 300;
+int passportWidth = 400;
+int passportSpeed = 10;
+color passportStampColor = 220;
+boolean passportGiven = false;
 boolean showStampHereText = true;
-color[] colors = {color(255,0,0), color(0,255,0)}; 
+color[] colors = {color(255, 0, 0), color(0, 255, 0)};
 
-boolean isDragging; // Variable to store whether the card is being dragged or not
+boolean isDragging; // Variable to store whether the passport is being dragged or not
 
 String passportTitle = "Passport";
-String cardStampText = "< STAMP HERE! >";
+String passportStampText = "< STAMP HERE! >";
 String currentDate;
 
 
 // Stamp variables
 PImage stampImg;
 
-float stampPosX, stampPosY; // Variables to store the position of the card
+float stampPosX, stampPosY; // Variables to store the position of the passportstamp
 int stampPaddingX = 33;
 int stampPaddingY = 10;
 int stampHeight;
@@ -37,75 +37,75 @@ int personMoveSpeed = 10;
 
 boolean personRejected = false;
 
-String[] dialogues = {"I can't wait to see my family!", "It's really cold out here.", "Hi, how are you doing? Are you having a nice day?", "Be quick, I am running late."};
+String[] dialogues = {"I can't wait to see my family!", "It's really cold out here.", "Hi, how are you doing? Are you having a nice day?", "Be quick, I am running late.", "Ugh finally!"};
 int randomIndex = int(random(0, dialogues.length));
 String randomDialogue = dialogues[randomIndex];
 
-void drawCard() {
-  // Draw the card
+void drawPassport() {
+  // Draw the passport
   fill(242, 238, 203);
-  rect(cardPosX, cardPosY, cardWidth, cardHeight, 10); // Draw a rounded rectangle for the card body
-  
+  rect(passportPosX, passportPosY, passportWidth, passportHeight, 10); // Draws a rounded rectangle for the passport body
+
   // Title
   fill(0);
-  textAlign(LEFT, TOP); // Align the text to the top left corner
+  textAlign(LEFT, TOP); // Aligns the text to the top left corner
   textSize(40);
-  text(passportTitle, cardPosX + 20, cardPosY + 10); // Draw the title
-  
+  text(passportTitle, passportPosX + 20, passportPosY + 10); // Draws the title
+
   // Date
   textSize(36);
-  text(currentDate, cardPosX + 20, cardPosY +80, 180, 110);
-  
-  // Stamp area on card
-  fill(cardStampColor);
+  text(currentDate, passportPosX + 20, passportPosY +80, 180, 110);
+
+  // Stamp area on passport
+  fill(passportStampColor);
   stroke(200);
-  rect(cardPosX + 20, cardPosY + cardHeight * 0.5, cardWidth - 40, cardHeight / 2.5, 20); // Draw the stamp area
-  
+  rect(passportPosX + 20, passportPosY + passportHeight * 0.5, passportWidth - 40, passportHeight / 2.5, 20); // Draws the stamp area
+
   if (showStampHereText) {
     // Stamp here text
     fill(160);
     textSize(25);
-    text(cardStampText, cardPosX + 110, cardPosY + cardHeight * 0.65); // Draw the title 
+    text(passportStampText, passportPosX + 110, passportPosY + passportHeight * 0.65); // Draws the placeholder text
   }
 }
 
 void setup() {
   fullScreen();
-  
+
   // To get the current date in string format
   SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
   Date date = new Date();
   currentDate = dateFormat.format(date);
-  
-  // Set the initial card position
-  cardPosX = width / 2 - cardWidth / 2; // Initialize the x position to the center of the window
-  cardPosY = 0; // Initialize the y position to the center of the window
-  
+
+  // Set the initial passport position
+  passportPosX = width / 2 - passportWidth / 2; // Initialize the x position to the center of the window
+  passportPosY = 0; // Initialize the y position to the center of the window
+
   // Set the initial stamp position
   stampPosX = width / 1.5;
   stampPosY =  height * 0.6;
-  
+
   stampImg = loadImage("stamp.png"); // Load stamp image
-  stampImg.resize(cardWidth - 40, 0);
-  
+  stampImg.resize(passportWidth - 40, 0);
+
   stampHeight = stampImg.height - 50;
-  
+
   personImg = loadImage("character.jpg"); // Load person image
   personImg.resize(300, 0);
-  
+
   personPosX = width / 2 - 150;
   personTextPosX = width / 2;
 }
 
 void draw() {
-  background(50); // Clear the screen 
-  
-  if (cardPosY < height * 0.3 && !cardPresented) {
-    cardPosY += cardSpeed;
+  background(50);
+
+  if (passportPosY < height * 0.3 && !passportGiven) {
+    passportPosY += passportSpeed;
   } else {
-    cardPresented = true;
+    passportGiven = true;
   }
-  
+
   if (personPosX < width + width * 0.5 && personTextPosX < width + width * 0.5 && !showStampHereText) {
     if (personRejected) {
       personPosX -= personMoveSpeed;
@@ -115,46 +115,42 @@ void draw() {
       personTextPosX += personMoveSpeed;
     }
   }
-  
+
   fill(255);
   textAlign(CENTER, CENTER); // set text alignment to center
   textSize(48); // set text size to 24 pixels
   text(randomDialogue, personTextPosX, 50);
-  
+
   image(personImg, personPosX, 110); // Show person
-  drawCard();
+  drawPassport();
   image(stampImg, stampPosX, stampPosY); // Show stamp
-  
-  // If the card is being dragged, update its position based on the mouse position
+
   if (isDragging) {
-    cardPosX = mouseX + cardOffsetX;
-    cardPosY = mouseY + cardOffsetY;
-    
-    // If the card is in stamp area
-    if (cardPosX > stampPosX - stampPaddingX && cardPosX < stampPosX + stampPaddingX 
-      && cardPosY > stampPosY - stampHeight - stampPaddingY && cardPosY < stampPosY - stampHeight + stampPaddingY && isDragging) {
-        if (showStampHereText) {
-          int randomInt = int(random(2));
-          if (randomInt == 0) {
-            personRejected = true;
-          }
-          cardStampColor = colors[randomInt]; // Set stamp color to either red or green
-          showStampHereText = false;
+    passportPosX = mouseX + passportOffsetX;
+    passportPosY = mouseY + passportOffsetY;
+
+    if (passportPosX > stampPosX - stampPaddingX && passportPosX < stampPosX + stampPaddingX
+      && passportPosY > stampPosY - stampHeight - stampPaddingY && passportPosY < stampPosY - stampHeight + stampPaddingY && isDragging) {
+      if (showStampHereText) {
+        int randomInt = int(random(2));
+        if (randomInt == 0) {
+          personRejected = true;
         }
+        passportStampColor = colors[randomInt]; // Set stamp color to either red or green
+        showStampHereText = false;
+      }
     }
   }
 }
 
 void mousePressed() {
-  // If the mouse is pressed inside the card, and the card is already presented, start dragging
-  if (mouseX > cardPosX && mouseX < cardPosX + cardHeight && mouseY > cardPosY && mouseY < cardPosY + cardWidth && cardPresented) {
-    cardOffsetX = cardPosX - mouseX;
-    cardOffsetY = cardPosY - mouseY;
+  if (mouseX > passportPosX && mouseX < passportPosX + passportHeight && mouseY > passportPosY && mouseY < passportPosY + passportWidth && passportGiven) {
+    passportOffsetX = passportPosX - mouseX;
+    passportOffsetY = passportPosY - mouseY;
     isDragging = true;
   }
 }
 
 void mouseReleased() {
-  // When the mouse is released, stop dragging
   isDragging = false;
 }
